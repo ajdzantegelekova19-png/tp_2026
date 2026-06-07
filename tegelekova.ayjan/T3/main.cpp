@@ -1,15 +1,10 @@
 #include "polygon.hpp"
+#include "commands.hpp"
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
-#include <iterator>
-#include <algorithm>
-
-namespace tchervinsky
-{
-    void processCommand(std::vector<Polygon>& polygons, const std::string& line);
-}
+#include <sstream>
 
 int main(int argc, char* argv[])
 {
@@ -27,14 +22,21 @@ int main(int argc, char* argv[])
     }
 
     std::vector<tchervinsky::Polygon> polygons;
-
-    std::copy(
-        std::istream_iterator<tchervinsky::Polygon>(file),
-        std::istream_iterator<tchervinsky::Polygon>(),
-        std::back_inserter(polygons)
-    );
-
     std::string line;
+
+    while (std::getline(file, line))
+    {
+        if (line.empty()) continue;
+
+        std::istringstream iss(line);
+        tchervinsky::Polygon p;
+
+        if (iss >> p)
+        {
+            polygons.push_back(p);
+        }
+    }
+
     while (std::getline(std::cin, line))
     {
         if (line.empty()) continue;
